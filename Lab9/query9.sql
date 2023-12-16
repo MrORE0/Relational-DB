@@ -121,7 +121,46 @@ ORDER BY
     b.dep_date;
 
 
+-- 19. List by name all guests who have stayed at the “Hotel California” on more than three occasions
+SELECT g.guest_num, g.guest_name FROM guests AS g
+JOIN bookings AS b ON g.guest_num = b.guest_num
+JOIN hotels AS h ON b.hotel_num = h.hotel_num
+WHERE h.hotel_name = 'Hotel California'
+GROUP BY g.guest_num
+HAVING COUNT(b.guest_num) > 3;
 
+-- !!!!
+-- 20. Determine the occupancy of the “Hotel California” for New Year’s Day. (The occupancy
+-- is the ratio of the number of bookings to the total number of rooms.)
+SELECT (count(DISTINCT b.guest_num) / r.room_num) AS occupancy 
+FROM bookings AS b
+JOIN rooms AS r ON b.room_num = r.room_num
+JOIN hotels AS h ON b.hotel_num = h.hotel_num
+WHERE h.hotel_name = 'Hotel California';
 
+-- !!!!
+-- 21. Which guest has made the greatest number of bookings in 2012?
+SELECT g.guest_num, g.guest_name, COUNT(*) AS num_bookings
+FROM guests AS g
+JOIN bookings AS b ON g.guest_num = b.guest_num
+WHERE b.arr_date LIKE '2012-__-__'
+GROUP BY g.guest_num, g.guest_name
+ORDER BY num_bookings DESC
+LIMIT 1;
 
+-- 22. Which hotel has had the greatest number of guests stay during 2012?
+SELECT h.hotel_num, h.hotel_name, COUNT(*) AS number_of_bookings
+FROM hotels AS h
+JOIN bookings AS b ON h.hotel_num = b.hotel_num
+GROUP BY h.hotel_num, h.hotel_name
+ORDER BY number_of_bookings DESC
+LIMIT 1;
+
+-- 23. Find all pairs of guests that share the same address
+SELECT g.guest_name AS guest1, g2.guest_name AS guest2 
+FROM guests AS g
+JOIN guests AS g2 ON g.guest_address = g2.guest_address
+WHERE g.guest_num <> g2.guest_num;
+
+-- 24. What day during 2012 saw the greatest number of guests arrive?
 
